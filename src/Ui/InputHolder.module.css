@@ -8,13 +8,13 @@
   left: 1.5rem;
 } */
 .main_input {
-  margin: 1rem 1rem;
+  margin: 1rem 0;
   background-color: inherit;
 }
 
 .input_label {
   font-size: 2rem;
-  left: 1.5rem;
+  left: 0.8rem;
 }
 
 .input_container .main_input {
@@ -36,7 +36,7 @@
 .main_input:valid ~ .input_label {
   transform: translateY(-1.1rem);
   font-size: 0.9rem;
-  left: 25px;
+  left: 0.8rem;
   background-color: rgb(239, 237, 243);
 }
 

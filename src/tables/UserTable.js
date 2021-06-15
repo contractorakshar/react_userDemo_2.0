@@ -2,19 +2,24 @@ import React from "react";
 import Card from "../Ui/Card";
 import "./UserTable.css";
 const UserTable = (props) => {
-  console.log(props.users);
-  const sortingArray = () => {
-    let obj = props.users.sort((a, b) => {
-      if (a.name < b.name) {
-        return -1;
-      }
-      if (a.name > b.name) {
-        return 1;
-      }
-      return 0;
-    });
-    props.arraySorting(obj);
-  };
+  // const [search, setSeacrh] = useState("");
+  // console.log(props.users);
+  // const sortingArray = () => {
+  //   let obj = props.users.sort((a, b) => {
+  //     if (a.name < b.name) {
+  //       return -1;
+  //     }
+  //     if (a.name > b.name) {
+  //       return 1;
+  //     }
+  //     return 0;
+  //   });
+  //   props.arraySorting(obj);
+  // };
+
+  // useEffect(() => {
+  //   setToggle(true);
+  // }, [Toggle]);
 
   // const searchHandler = (event) => {
   // let obj = props.users.find((o) => o.name === event.target.value);
@@ -27,12 +32,20 @@ const UserTable = (props) => {
     <>
       {props.users.length > 0 && (
         <Card>
-          <h2>View users</h2>
-          {/* <input type="search" placeholder="Search here" onChange={searchHandler} /> */}
+          <h2>View Users</h2>
+          <input
+            type="search"
+            placeholder="Search here"
+            style={{ width: "100%", height: "2rem", fontSize: "1rem" }}
+            // onChange={(e) => {
+            //   setSeacrh(e.target.value);
+            // }}
+          />
           <table>
             <thead>
               <tr>
-                <th onClick={sortingArray}>Name</th>
+                {/* <th onClick={sortingArray}>Name</th> */}
+                <th>Name</th>
                 <th>Last name</th>
                 <th>Age</th>
                 <th>Maths</th>
@@ -43,7 +56,7 @@ const UserTable = (props) => {
             <tbody>
               {props.users.length > 0 ? (
                 props.users.map((user) => (
-                  <tr key={user.id}>
+                  <tr key={`${user.id}`}>
                     <td>{user.name}</td>
                     <td>{user.lname}</td>
                     <td>{user.age}</td>
@@ -54,14 +67,14 @@ const UserTable = (props) => {
                         onClick={() => {
                           props.editRow(user);
                         }}
-                        className="button muted-button"
+                        className="Editbutton"
                       >
                         Edit
-                      </button>{" "}
-                      |{" "}
+                      </button>
+                      {"   "}
                       <button
                         onClick={() => props.deleteUser(user.id)}
-                        className="button muted-button"
+                        className="Delbutton"
                       >
                         Delete
                       </button>

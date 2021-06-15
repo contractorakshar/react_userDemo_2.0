@@ -3,9 +3,9 @@ import Card from "./Ui/Card";
 import Button from "./Ui/Button";
 import "./AddUsers.css";
 import InputHolder from "./Ui/InputHolder";
+import axios from "axios";
 const AddUserForm = (props) => {
   const initialFormState = {
-    id: null,
     name: "",
     lname: "",
     age: "",
@@ -13,6 +13,7 @@ const AddUserForm = (props) => {
     sci: "",
   };
   const [user, setUser] = useState(initialFormState);
+  // const [errorText, setError] = useState(false);
 
   const handleInputChange = (event) => {
     // console.log(event.target.value);
@@ -21,25 +22,28 @@ const AddUserForm = (props) => {
     setUser({ ...user, [name]: value });
   };
 
+  const submithandler = (event) => {
+    event.preventDefault();
+    if (!user.name || !user.lname || !user.age || !user.maths || !user.sci) {
+      return;
+    }
+
+    axios
+      .post(
+        "https://react-http-8f407-default-rtdb.firebaseio.com//users.json",
+        user
+      )
+      .catch((e) => {
+        console.log(e);
+      });
+    props.addUser(user);
+    setUser(initialFormState);
+  };
   return (
     <Card>
       <h2>Add User</h2>
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          if (
-            !user.name ||
-            !user.lname ||
-            !user.age ||
-            !user.maths ||
-            !user.sci
-          )
-            return;
-
-          props.addUser(user);
-          setUser(initialFormState);
-        }}
-      >
+      <form onSubmit={submithandler}>
+        {/* <span style={{ color: "red" }}>{errorText.Record}</span> */}
         <InputHolder
           label="Name"
           type="text"

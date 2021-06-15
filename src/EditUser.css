@@ -7,8 +7,8 @@
   font-size: 1rem;
   color: white;
   font-weight: bolder;
-  border-radius: 20px;
-  margin-top: 1rem;
+  border-radius: 10px;
+  margin: 1rem 1rem;
 }
 @media (max-width: 480px) {
   .btnCancle {
