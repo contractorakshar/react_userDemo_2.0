@@ -10,7 +10,7 @@ const App = () => {
   const [editing, setEditing] = useState(false);
   const getUsers = useCallback(async () => {
     await axios
-      .get("https://react-http-8f407-default-rtdb.firebaseio.com/users.json")
+      .get("firebase url")
       .then((res) => {
         const usersData = [];
 
@@ -55,23 +55,20 @@ const App = () => {
   };
 
   const deleteUser = (id) => {
-    setUsers(users.filter((user) => user.id !== id));
+    // setUsers(users.filter((user) => user.id !== id));
+    // console.log(id);
     axios
-      .delete(
-        `https://react-http-8f407-default-rtdb.firebaseio.com/users/${id}.json`
-      )
+      .delete("firebase url")
+      .then(() => {
+        getUsers();
+      })
       .catch((e) => {
-        alert(e);
+        // alert(e);
       });
   };
 
   const arraySorting = (obj) => {
-    // console.log(obj);
     setUsers(obj);
-    // setUsers((prev) => {
-    //   return [...prev, obj];
-    // });
-    // setUsers(obj);
   };
   const editRow = (user) => {
     setEditing(true);
@@ -90,10 +87,7 @@ const App = () => {
     setEditing(false);
 
     axios
-      .put(
-        `https://react-http-8f407-default-rtdb.firebaseio.com/users/${id}.json`,
-        updatedUser
-      )
+      .put("firebase Url")
       .then(() => {
         setUsers(users.map((user) => (user.id === id ? updatedUser : user)));
       })

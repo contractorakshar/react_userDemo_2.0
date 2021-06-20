@@ -3,7 +3,7 @@ import Card from "../Ui/Card";
 import "./UserTable.css";
 const UserTable = (props) => {
   // const [search, setSeacrh] = useState("");
-  // console.log(props.users);
+
   // const sortingArray = () => {
   //   let obj = props.users.sort((a, b) => {
   //     if (a.name < b.name) {
@@ -56,7 +56,7 @@ const UserTable = (props) => {
             <tbody>
               {props.users.length > 0 ? (
                 props.users.map((user) => (
-                  <tr key={`${user.id}`}>
+                  <tr key={Math.random().toString()}>
                     <td>{user.name}</td>
                     <td>{user.lname}</td>
                     <td>{user.age}</td>

@@ -4,126 +4,209 @@ import Button from "./Ui/Button";
 import "./AddUsers.css";
 import InputHolder from "./Ui/InputHolder";
 import axios from "axios";
+import useInput from "./hooks/use_Input";
+
+const isNotEmpty = (value) => value.trim() !== "";
+
 const AddUserForm = (props) => {
-  const initialFormState = {
-    name: "",
-    lname: "",
-    age: "",
-    maths: "",
-    sci: "",
-  };
-  const [user, setUser] = useState(initialFormState);
-  // const [errorText, setError] = useState(false);
+  const [toast, setToast] = useState(false);
+  const [addingData, setAddingData] = useState(false);
 
-  const handleInputChange = (event) => {
-    // console.log(event.target.value);
-    const { name, value } = event.target;
+  // const initialFormState = {
+  //   name: "",
+  //   lname: "",
+  //   age: "",
+  //   maths: "",
+  //   sci: "",
+  // };
+  // const [user, setUser] = useState(initialFormState);
 
-    setUser({ ...user, [name]: value });
-  };
+  const {
+    value: firstNameValue,
+    isValid: firstNameIsValid,
+    hasError: firstNameHasError,
+    valueChangeHandler: firstNameChangeHandler,
+    inputBlurHandler: firstNameBlurHandler,
+    reset: resetFirstName,
+  } = useInput(isNotEmpty);
 
-  const submithandler = (event) => {
-    event.preventDefault();
-    if (!user.name || !user.lname || !user.age || !user.maths || !user.sci) {
-      return;
-    }
+  const {
+    value: lastNameValue,
+    isValid: lastNameIsValid,
+    hasError: lastNameHasError,
+    valueChangeHandler: lastNameChangeHandler,
+    inputBlurHandler: lastNameBlurHandler,
+    reset: resetLastName,
+  } = useInput(isNotEmpty);
 
-    axios
-      .post(
-        "https://react-http-8f407-default-rtdb.firebaseio.com//users.json",
-        user
-      )
+  const {
+    value: ageValue,
+    isValid: ageIsValid,
+    hasError: ageHasError,
+    valueChangeHandler: ageChangeHandler,
+    inputBlurHandler: ageBlurHandler,
+    reset: resetAge,
+  } = useInput(isNotEmpty);
+
+  const {
+    value: mathsValue,
+    isValid: mathsIsValid,
+    hasError: mathsHasError,
+    valueChangeHandler: mathsChangeHandler,
+    inputBlurHandler: mathsBlurHandler,
+    reset: resetMaths,
+  } = useInput(isNotEmpty);
+
+  const {
+    value: scienceValue,
+    isValid: scienceIsValid,
+    hasError: scienceHasError,
+    valueChangeHandler: scienceChangeHandler,
+    inputBlurHandler: scienceBlurHandler,
+    reset: resetScience,
+  } = useInput(isNotEmpty);
+
+  let formIsValid = false;
+
+  if (
+    firstNameIsValid &&
+    lastNameIsValid &&
+    ageIsValid &&
+    mathsIsValid &&
+    scienceIsValid
+  ) {
+    formIsValid = true;
+  }
+
+  // const handleInputChange = (event) => {
+  //   const { name, value } = event.target;
+
+  //   setUser({ ...user, [name]: value });
+  // };
+
+  const addUserCall = async (user) => {
+    setAddingData(true);
+    // console.log(user);
+    await axios
+      .post("firebas url", user)
+      .then((res) => {
+        setAddingData(false);
+        setToast(true);
+      })
       .catch((e) => {
         console.log(e);
       });
-    props.addUser(user);
-    setUser(initialFormState);
   };
-  return (
-    <Card>
-      <h2>Add User</h2>
-      <form onSubmit={submithandler}>
-        {/* <span style={{ color: "red" }}>{errorText.Record}</span> */}
-        <InputHolder
-          label="Name"
-          type="text"
-          name="name"
-          value={user.name}
-          onChange={handleInputChange}
-        />
+  const submithandler = (event) => {
+    event.preventDefault();
+    if (!formIsValid) {
+      // setHelperText(true);
+      return;
+    }
+    const user = {
+      id: Math.random().toString(),
+      name: firstNameValue,
+      lname: lastNameValue,
+      age: ageValue,
+      maths: mathsValue,
+      sci: scienceValue,
+    };
 
-        <InputHolder
-          label="Last Name"
-          type="text"
-          name="lname"
-          value={user.lname}
-          onChange={handleInputChange}
-        />
-        {/* <label>last name</label>
-        <input
-          type="text"
-          name="lname"
-          value={user.lname}
-          onChange={handleInputChange}
-        /> */}
-        {/* <label>Age</label>
-        <input
-          type="number"
-          name="age"
-          value={user.age}
-          onChange={handleInputChange}
-        /> */}
-        <div className="other_field_container">
-          <InputHolder
-            label="Age"
-            type="number"
-            name="age"
-            value={user.age}
-            onChange={handleInputChange}
-          />
+    addUserCall(user);
+    props.addUser(user);
+    resetFirstName();
+    resetLastName();
+    resetAge();
+    resetMaths();
+    resetScience();
+    setTimeout(() => {
+      setToast(false);
+    }, 3000);
+  };
+
+  return (
+    <>
+      <Card>
+        <h2>Add User</h2>
+        <form onSubmit={submithandler}>
+          <div>
+            <InputHolder
+              label="Name"
+              type="text"
+              name="name"
+              onChange={firstNameChangeHandler}
+              value={firstNameValue}
+              onBlur={firstNameBlurHandler}
+              // required
+            />{" "}
+            {firstNameHasError && (
+              <p className="error-text">Please enter a first name.</p>
+            )}
+          </div>
+          <div>
+            <InputHolder
+              label="Last Name"
+              type="text"
+              name="lname"
+              onChange={lastNameChangeHandler}
+              value={lastNameValue}
+              onBlur={lastNameBlurHandler}
+              // required
+            />{" "}
+            {lastNameHasError && (
+              <p className="error-text">Please enter a last name.</p>
+            )}
+          </div>
+          <div className="other_field_container">
+            <InputHolder
+              label="Age"
+              type="number"
+              name="age"
+              onChange={ageChangeHandler}
+              value={ageValue}
+              onBlur={ageBlurHandler}
+            />
+            {ageHasError && <p className="error-text">Please enter a age.</p>}
+          </div>
+          <div className="other_field_container">
+            <InputHolder
+              label="Maths"
+              type="number"
+              name="maths"
+              onChange={mathsChangeHandler}
+              value={mathsValue}
+              onBlur={mathsBlurHandler}
+            />
+            {mathsHasError && (
+              <p className="error-text">Please enter maths marks.</p>
+            )}
+          </div>
+          <div className="other_field_container">
+            <InputHolder
+              label="Science"
+              type="number"
+              name="sci"
+              onChange={scienceChangeHandler}
+              value={scienceValue}
+              onBlur={scienceBlurHandler}
+            />
+            {scienceHasError && (
+              <p className="error-text">Please enter science marks.</p>
+            )}
+          </div>
+          <Button type="submit">Add User </Button>
+        </form>
+      </Card>
+      {addingData && (
+        <div className="toats adding">
+          <p>
+            Wait... <br />
+            Adding data
+          </p>
         </div>
-        {/* <label>Maths</label>
-        <input
-          type="number"
-          name="maths"
-          value={user.maths}
-          onChange={handleInputChange}
-        />
-        <label>Science</label>
-        <input
-          type="number"
-          name="sci"
-          value={user.sci}
-          onChange={handleInputChange}
-        /> */}
-        <div className="other_field_container">
-          <InputHolder
-            label="Maths"
-            type="number"
-            name="maths"
-            value={user.maths}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div className="other_field_container">
-          <InputHolder
-            label="Science"
-            type="number"
-            name="sci"
-            value={user.sci}
-            onChange={handleInputChange}
-          />
-        </div>
-        {/* <label>Name</label>
-<input
-  type="text"
-  name="name"
-  value={user.name}
-  onChange={handleInputChange}
-/> */}
-        <Button type="submit">Add User </Button>
-      </form>
-    </Card>
+      )}
+      {toast && !addingData && <div className="toats">Data Added</div>}
+    </>
   );
 };
 
